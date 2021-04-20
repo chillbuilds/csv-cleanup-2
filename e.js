@@ -1,5 +1,6 @@
 const fs = require('fs')
 const linesPer = 30
+const errArr = fs.readFileSync('./errors.csv', 'utf-8').split('\n\t')
 var csvArr = []
 var csvContArr = []
 
@@ -8,6 +9,7 @@ fs.readdirSync('./input').forEach(file => {
   })
 
 let raw = fs.readFileSync(`./input/${csvArr[0]}`, 'utf-8').split('\n')
+raw.pop()
 
 for(var i = 1; i < raw.length; i=i+linesPer){
     let chunkArr = []
@@ -23,4 +25,15 @@ for(var i = 1; i < raw.length; i=i+linesPer){
     let skuRaw = lineArr[lineArr.length-3].split('-')
     csvContArr.push({sku: skuRaw[0], chunk: chunkArr, urls: urlArr})
 }
-console.log(csvContArr[0])
+
+// loop through csv array and cross check error urls
+
+for(var i = 0; i < csvContArr.length; i++){
+    for(var j = 0; j < errArr.length; j++){
+        for(var k = 0; k < csvContArr[i].urls.length; k++){
+            if(csvContArr[i].urls[k] == errArr[j]){
+                console.log(csvContArr[i].sku)
+            }
+        }
+    }
+}
